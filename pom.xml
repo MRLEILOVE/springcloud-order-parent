@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!--统一SpringBoot版本，子模块这里使用父模块的-->
+    <parent>
+        <!-- lookup parent from repository -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.2.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.leigq.order</groupId>
+    <artifactId>order-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <!--父模块打包类型必须为pom-->
+    <packaging>pom</packaging>
+    <name>order-parent</name>
+    <description>Order parent project for Spring Boot</description>
+
+    <!--引入子模块-->
+    <modules>
+        <module>order-client</module>
+        <module>order-common</module>
+        <module>order-server</module>
+    </modules>
+
+
+    <properties>
+        <!-- 在properties中统一控制依赖包的版本，更清晰-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+        <order-common.version>0.0.1-SNAPSHOT</order-common.version>
+        <druid.version>1.0.29</druid.version>
+        <mybatis.version>1.3.1</mybatis.version>
+        <pagehelper.version>1.2.3</pagehelper.version>
+        <commodity-client.version>0.0.1-SNAPSHOT</commodity-client.version>
+        <springboot-common.version>0.0.1-SNAPSHOT</springboot-common.version>
+    </properties>
+
+    <!--父项目集成一些一般项目都必须要的包-->
+    <dependencies>
+
+    </dependencies>
+
+
+    <!--依赖管理，版本定义在此定义-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--本项目公共包-->
+            <dependency>
+                <groupId>com.leigq.order</groupId>
+                <artifactId>order-common</artifactId>
+                <version>${order-common.version}</version>
+            </dependency>
+
+            <!-- druid数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!--mybatis-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+
+            <!-- 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
+            <!--商品服务-->
+            <dependency>
+                <groupId>com.leigq.commodity</groupId>
+                <artifactId>commodity-client</artifactId>
+                <version>${commodity-client.version}</version>
+            </dependency>
+
+            <!--spring-boot基础包，自己定义的-->
+            <dependency>
+                <groupId>com.leigq.common</groupId>
+                <artifactId>springboot-common</artifactId>
+                <version>${springboot-common.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--该插件作用是打一个可运行的包，必须要写在需要打包的项目里。这里的父模块不需要打包运行，所以删掉该插件。-->
+    <!-- <build>
+         <plugins>
+             <plugin>
+                 <groupId>org.springframework.boot</groupId>
+                 <artifactId>spring-boot-maven-plugin</artifactId>
+             </plugin>
+         </plugins>
+     </build>-->
+
+</project>
