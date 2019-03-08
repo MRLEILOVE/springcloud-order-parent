@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("prototype")
-public class Response {
+public class OrderResp {
 
 	/** 默认成功响应码 */
 	private static final String DEAFAULT_SUCCESS_CODE = "200";
@@ -49,7 +49,7 @@ public class Response {
      * </p>
      * @return 响应对象
      */
-    public Response success() {
+    public OrderResp success() {
         this.meta = new Meta(DEAFAULT_SUCCESS_CODE, DEAFAULT_SUCCESS_MSG);
         return this;
     }
@@ -69,12 +69,12 @@ public class Response {
      * @param data 返回数据，如果没有数据请传null
      * @return 响应对象
      */
-    public Response success(String code, String msg, Object data) {
+    public OrderResp success(String code, String msg, Object data) {
     	if (StringUtils.isBlank(code)) {
-			code = Response.DEAFAULT_SUCCESS_CODE;
+			code = OrderResp.DEAFAULT_SUCCESS_CODE;
 		}
     	if (StringUtils.isBlank(msg)) {
-    		msg = Response.DEAFAULT_SUCCESS_MSG;
+    		msg = OrderResp.DEAFAULT_SUCCESS_MSG;
 		}
     	this.meta = new Meta(code, msg);
         this.data = data;
@@ -95,11 +95,11 @@ public class Response {
 	 * @param data 返回数据
 	 * @return 响应对象
 	 */
-	public Response success(String msg, Object data) {
+	public OrderResp success(String msg, Object data) {
 		if (StringUtils.isBlank(msg)) {
-			msg = Response.DEAFAULT_SUCCESS_MSG;
+			msg = OrderResp.DEAFAULT_SUCCESS_MSG;
 		}
-		this.meta = new Meta(Response.DEAFAULT_SUCCESS_CODE, msg);
+		this.meta = new Meta(OrderResp.DEAFAULT_SUCCESS_CODE, msg);
 		this.data = data;
 		return this;
 	}
@@ -117,8 +117,8 @@ public class Response {
 	 * @param data 返回数据，如果没有数据请传null
 	 * @return 响应对象
 	 */
-	public Response success(Object data) {
-		this.meta = new Meta(Response.DEAFAULT_SUCCESS_CODE, Response.DEAFAULT_SUCCESS_MSG);
+	public OrderResp success(Object data) {
+		this.meta = new Meta(OrderResp.DEAFAULT_SUCCESS_CODE, OrderResp.DEAFAULT_SUCCESS_MSG);
 		this.data = data;
 		return this;
 	}
@@ -135,7 +135,7 @@ public class Response {
      * </p>
      * @return 响应对象
      */
-    public Response failure() {
+    public OrderResp failure() {
         this.meta = new Meta(DEAFAULT_FAILURE_CODE, DEAFAULT_FAILURE_MSG);
         return this;
     }
@@ -155,12 +155,12 @@ public class Response {
      * @param data 返回数据，如果没有数据请传null
      * @return 响应对象
      */
-    public Response failure(String code, String msg, Object data) {
+    public OrderResp failure(String code, String msg, Object data) {
     	if (StringUtils.isBlank(code)) {
-			code = Response.DEAFAULT_FAILURE_CODE;
+			code = OrderResp.DEAFAULT_FAILURE_CODE;
 		}
     	if (StringUtils.isBlank(msg)) {
-    		msg = Response.DEAFAULT_FAILURE_MSG;
+    		msg = OrderResp.DEAFAULT_FAILURE_MSG;
 		}
     	this.meta = new Meta(code, msg);
         this.data = data;
@@ -181,9 +181,9 @@ public class Response {
 	 * @param data 返回数据，如果没有数据请传null
 	 * @return 响应对象
 	 */
-	public Response failure(String msg, Object data) {
+	public OrderResp failure(String msg, Object data) {
 		if (StringUtils.isBlank(msg)) {
-			msg = Response.DEAFAULT_FAILURE_MSG;
+			msg = OrderResp.DEAFAULT_FAILURE_MSG;
 		}
 		this.meta = new Meta(DEAFAULT_FAILURE_CODE, msg);
 		this.data = data;

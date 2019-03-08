@@ -1,6 +1,6 @@
 package com.leigq.www.entity;
 
-import com.leigq.www.bean.BaseEntity;
+import com.leigq.common.springboot.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

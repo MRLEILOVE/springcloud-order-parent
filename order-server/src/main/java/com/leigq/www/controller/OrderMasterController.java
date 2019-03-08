@@ -1,13 +1,13 @@
 package com.leigq.www.controller;
 
+import com.leigq.common.springboot.util.RandomUtils;
+import com.leigq.www.bean.OrderResp;
 import com.leigq.www.client.CommodityClient;
 import com.leigq.www.common.entity.Commodity;
 import com.leigq.www.entity.OrderDetail;
 import com.leigq.www.entity.OrderMaster;
-import com.leigq.www.bean.Response;
 import com.leigq.www.service.OrderDetailService;
 import com.leigq.www.service.OrderMasterService;
-import com.leigq.www.util.RandomUtils;
 import com.leigq.www.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class OrderMasterController {
     private OrderMasterService orderMasterService;
 
     @Autowired
-    private Response response;
+    private OrderResp orderResp;
 
     @Resource
     private CommodityClient commodityClient;
@@ -57,7 +57,7 @@ public class OrderMasterController {
      * @return
      */
     @PostMapping("/orders")
-    public Response saveOrders(OrderVO orderVO) {
+    public OrderResp saveOrders(OrderVO orderVO) {
         //查询商品（调用商品服务，这里做简单一点，每次买一件商品；
         // 真实项目是每次可买多件商品，而且还要扣库存，我这里就不写了，主要是熟悉Feign的使用）
         final Commodity commodity = commodityClient.getCommodities(orderVO.getCId());
@@ -79,10 +79,10 @@ public class OrderMasterController {
                 BeanUtils.copyProperties(orderMaster, orderVO);
                 List<OrderDetail> orderDetails = orderDetailService.listOrderDetails(orderMaster.getId());
                 orderVO.setOrderDetails(orderDetails);
-                return response.success("下单成功！", orderVO);
+                return orderResp.success("下单成功！", orderVO);
             }
         }
-        return response.failure("下单失败，请稍候重试！", null);
+        return orderResp.failure("下单失败，请稍候重试！", null);
     }
 
 
