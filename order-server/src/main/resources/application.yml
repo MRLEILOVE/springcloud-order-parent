@@ -1,60 +1,83 @@
-# 订单服务端
+## ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓下面配置（此配置文件）为3个环境公用↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+# 服务器配置
+server:
+    # 建议不要直接写死，可以在VM options中通过-DServer.port=8080配置
+    port: 8081
+    tomcat:
+        uri-encoding: UTF-8
+
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 订单服务端 eureka 配置 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ #
 eureka:
     client:
         service-url:
             defaultZone: http://localhost:8761/eureka/
+        #表示eureka client间隔多久去拉取服务注册信息，默认为30秒
+        registryFetchIntervalSeconds: 5
     instance:
         # IP
         hostname: localhost
         instance-id: ${spring.application.name}:${server.port}:@project.version@
-# MyBatis配置
-mybatis:
-    mapper-locations: classpath*:/mapper/**/*.xml
-    type-aliases-package: com.leigq.www.domain.mapper
-    # 设置自动驼峰命名转换
-    configuration:
-      mapUnderscoreToCamelCase: true
-      # 使用mybatis插入自增主键ID的数据后返回自增的ID，配合keyProperty="id"使用
-      use-generated-keys: true
-      # spring boot集成mybatis的方式打印sql：https://blog.csdn.net/qq_22194659/article/details/81120712
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+        # 表示eureka client发送心跳给server端的频率，默认为30秒
+        leaseRenewalIntervalInSeconds: 10
+        # 健康检查的地址（依赖spring-boot-starter-actuator）
+        health-check-url-path: /actuator/health
 
-# 服务器配置
-server:
-    port: 8081
-    tomcat:
-        uri-encoding: UTF-8
+
 spring:
+    # yml在线格式转换工具（properties）:http://www.toyaml.com/index.html
+    # 通过命令行方式运行项目，激活不同环境的配置：java -jar spring-boot-building-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev/test/prod，
+    # 连续的两个减号 -- 就是对属性值进行赋值的标识。如果你怕命令行有风险，可以使用 SpringApplication.setAddCommandLineProperties(false) 禁用它；
+    profiles:
+        active: dev
+
     application:
         name: order
-    # 数据源、数据库连接池druid配置
-    datasource:
-        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKPYsCl3alwZlRb1vKoFdVu0LP3Nm/+vH5iOWxI83pkUbrQc13Lxz/VT3D+H+ziaUpUsA+ZjG4iZGTDJWZnP8kcCAwEAAQ==
-        driver-class-name: com.mysql.jdbc.Driver
-        filters: config,stat,wall,slf4j
-        initialSize: 5
-        maxActive: 20
-        maxPoolPreparedStatementPerConnectionSize: 20
-        maxWait: 60000
-        minEvictableIdleTimeMillis: 300000
-        minIdle: 5
-        password: kGJF6c+pzVsf49LGs01ss0yijBGXIpNEp20cMkNCQo3ONaeMNPeoW9M89v+nGeiWs95/D2Ms59uGyydDGUWpmg==
-        poolPreparedStatements: true
-        testOnBorrow: false
-        testOnReturn: false
-        testWhileIdle: true
-        timeBetweenEvictionRunsMillis: 60000
-        type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://localhost:3306/spring_cloud?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=true&serverTimezone=UTC
-        username: root
-        validationQuery: SELECT 1 FROM DUAL
 
-# 分页插件
+
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 数据源 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ #
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        ## Druid连接池配置，配置参考：https://blog.csdn.net/weixin_38187317/article/details/81562571
+        druid:
+            ## 监控过滤
+            web-stat-filter:
+                enabled: true
+                url-pattern: /*
+                exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
+            ## 监控页面配置
+            stat-view-servlet:
+                # 页面地址
+                url-pattern: /druid/*
+                # 白名单 多个ip逗号隔开
+                allow: 127.0.0.1,192.168.163.1
+                # IP黑名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
+                deny: 192.168.1.73
+
+
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ MyBatis 配置 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ #
+mybatis:
+    # mybatis mapper文件的位置
+    mapper-locations: classpath*:/mapper/**/*.xml
+    # 扫描mapper接口类的位置,在此处指明扫描实体类的包，在mapper.xml中就可以不用写pojo类的全路径名了
+    type-aliases-package: com.leigq.www.domain.mapper
+    configuration:
+        # 使用mybatis插入自增主键ID的数据后返回自增的ID，配合keyProperty="id"使用
+        use-generated-keys: true
+        # 设置自动驼峰命名转换
+        map-underscore-to-camel-case: true
+        # spring boot集成mybatis的方式打印sql：https://blog.csdn.net/qq_22194659/article/details/81120712
+        #    config-location: classpath:mybatis-config.xml
+
+
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 分页插件 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ #
+# SpringBoot整合PageHelper参考：https://blog.csdn.net/qq_27317475/article/details/81168241
 pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
+    helper-dialect: mysql
     params: count=countSql
+    reasonable: true
+    support-methods-arguments: true
 
 # 配置ribbon负载均衡规则（一般都是用默认的轮询就够了，暂时先注释掉）
 # COMMODITY 为需要调用的服务名
