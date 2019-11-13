@@ -1,10 +1,12 @@
 package com.leigq.www.controller;
 
 import com.leigq.www.client.CommodityClient;
+import com.leigq.www.common.vo.PostFeignTestVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -72,7 +74,7 @@ public class ClientController {
     private CommodityClient commodityClient;
 
     /**
-     * 使用 feign 远程调用客户端端简单测试
+     * 使用 feign 远程调用客户端端简单测试 Get 请求
      * <br>创建人： leiGQ
      * <br>创建时间： 2019-03-07 15:28
      * <p>
@@ -88,6 +90,30 @@ public class ClientController {
         final String obj = commodityClient.getCommodityMessages();
         log.warn("obj:{}", obj);
         return obj;
+    }
+
+
+    /**
+     * 使用 feign 远程调用客户端端简单测试 Get 请求
+     * <br>创建人： leiGQ
+     * <br>创建时间： 2019-03-07 15:28
+     * <p>
+     * 修改人： <br>
+     * 修改时间： <br>
+     * 修改备注： <br>
+     * </p>
+     * <br>
+     * @return 远程调用结果
+     */
+    @PostMapping("/commodity/postFeignTest")
+    public String postFeignTest() {
+        PostFeignTestVO postFeignTestVO = PostFeignTestVO.builder()
+                .id(1L)
+                .name("postFeignTest")
+                .build();
+        PostFeignTestVO vo = commodityClient.postFeignTest(postFeignTestVO);
+        log.warn("postFeignTest 远程调用 result : [{}]", vo);
+        return "OK";
     }
 
 }

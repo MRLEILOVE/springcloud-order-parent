@@ -33,6 +33,7 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
+        <!--本项目公共包-->
         <dependency>
             <groupId>com.leigq.order</groupId>
             <artifactId>order-common</artifactId>
